@@ -3,7 +3,6 @@ package com.ecommerce.controller;
 import com.ecommerce.model.Order;
 import com.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,53 +15,64 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    // Handle form to view order by ID
+    // View order by ID
     @GetMapping("/view")
     public String viewOrder(@RequestParam Long orderId) {
         Optional<Order> order = orderService.getOrderById(orderId);
         if (order.isPresent()) {
-            return "Order ID: " + orderId + " | Details: " + order.get().toString();
+            Order o = order.get();
+            return "Order ID: " + orderId 
+                + " | Product: " + o.getProductName() 
+                + " | Quantity: " + o.getQuantity() 
+                + " | Price: $" + o.getPrice();
         } else {
             return "Order ID not found.";
         }
     }
 
-    // Handle form to add order
+    // Add new order
     @PostMapping("/add")
-    public String addOrder(@RequestParam Long orderId, @RequestParam String orderDetails) {
-        // You can create an Order object directly
+    public String addOrder(@RequestParam String productName,
+                           @RequestParam int quantity,
+                           @RequestParam double price) {
         Order order = new Order();
-        order.setId(orderId);
-        order.setDetails(orderDetails);
+        order.setProductName(productName);
+        order.setQuantity(quantity);
+        order.setPrice(price);
 
         orderService.createOrder(order);
-        return "Order Added: " + orderId;
+        return "Order Added: " + productName;
     }
 
-    // Handle form to update order
+    // Update existing order
     @PostMapping("/update")
-    public String updateOrder(@RequestParam Long orderId, @RequestParam String orderDetails) {
+    public String updateOrder(@RequestParam Long orderId,
+                              @RequestParam String productName,
+                              @RequestParam int quantity,
+                              @RequestParam double price) {
         Optional<Order> existingOrder = orderService.getOrderById(orderId);
         if (existingOrder.isPresent()) {
             Order order = existingOrder.get();
-            order.setDetails(orderDetails);
-            orderService.createOrder(order); // You can use save or update in your service
+            order.setProductName(productName);
+            order.setQuantity(quantity);
+            order.setPrice(price);
+            orderService.createOrder(order);
             return "Order Updated: " + orderId;
         } else {
             return "Order ID not found!";
         }
     }
 
-    // Optional: Expose all orders
+    // List all orders
     @GetMapping("/all")
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
 
-    // Optional: Delete Order (if needed)
+    // Delete order
     @DeleteMapping("/delete/{id}")
     public String deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
-        return "Order with ID " + id + " has been deleted.";
+        return "Order with ID " + id + " deleted.";
     }
 }
