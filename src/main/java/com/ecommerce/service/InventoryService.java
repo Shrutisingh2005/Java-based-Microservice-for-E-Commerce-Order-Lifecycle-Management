@@ -20,7 +20,7 @@ public class InventoryService {
         return item.isPresent() && item.get().getStock() >= qty;
     }
 
-    public void decreaseStock(Long productId, int qty) {
+    public void reduceStock(Long productId, int qty) {
         Inventory item = repo.findById(productId).orElseThrow();
         item.setStock(item.getStock() - qty);
         repo.save(item);
