@@ -15,13 +15,14 @@ public class Order {
     private String productName;
     private int quantity;
     private double price;
+    private String status;
 
     // Getters and Setters
-    public Long getId() {
+    public Long getProductId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setProductId(Long id) {
         this.id = id;
     }
 
@@ -47,6 +48,12 @@ public class Order {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+    public void setStatus(String s){
+        this.status = status;
+    }
+    public void getStatus(){
+        return status;
     }
 }
 
