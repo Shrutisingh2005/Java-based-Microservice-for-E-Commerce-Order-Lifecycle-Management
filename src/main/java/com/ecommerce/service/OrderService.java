@@ -23,7 +23,7 @@ public class OrderService {
     // Create Order with inventory check and payment simulation
     public Order createOrder(Order order) {
         // 1. Check inventory stock
-        boolean stockAvailable = inventoryService.isStockAvailable(order.getProductId(), order.getQuantity());
+        boolean stockAvailable = inventoryService.checkStock(order.getProductId(), order.getQuantity());
         if (!stockAvailable) {
             order.setStatus("FAILED_INVENTORY");
             return orderRepository.save(order);
